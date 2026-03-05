@@ -18,7 +18,7 @@ else:
 
 # Botón de recarga
 if st.button("Recargar datos"):
-    st.experimental_rerun()
+    st.rerun()
 
 st.set_page_config(page_title="SMA200 - Universos", layout="wide")
 st.title("Valores destacados por Media Semanal de los ultimos 200 días")
