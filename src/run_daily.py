@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import yfinance as yf
 from datetime import datetime
@@ -55,6 +56,7 @@ def main():
     raw = download_prices(TICKERS)
     px = to_long_format(raw)
     under = compute_under_sma200(px)
+    os.makedirs("data",exist_ok=True)
 
     # Guardamos CSV para que el dashboard lo lea
     under.to_csv("data/under_sma200.csv", index=False)
