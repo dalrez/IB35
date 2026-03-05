@@ -83,7 +83,7 @@ def compute_under_sma200(px: pd.DataFrame) -> pd.DataFrame:
     # Delta / % bajo SMA200
     last["DeltaToSMA200"] = last["AdjClose"] - last["SMA200"]
     last["PctBelow"] = (last["AdjClose"] / last["SMA200"] - 1.0) * 100
-    
+    last = last.dropna(subset=["SMA200", "PctBelow"]).copy()
     last["BelowThreshold"] = last["PctBelow"] < THRESHOLD_PCT
 
 
