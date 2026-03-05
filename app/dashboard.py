@@ -1,9 +1,17 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import os
+from datetime import datetime
+
+ts = os.path.getmtime(PATH)
+st.caption("Última actualización: " + datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S"))
+
+if st.button("Recargar datos"):
+    st.experimental_rerun()
 
 st.set_page_config(page_title="SMA200 - Universos", layout="wide")
-st.title("Valores bajo SMA200")
+st.title("Valores destacados por Media Semanal de los ultimos 200 días")
 
 PATH = "data/under_sma200_all.csv"
 
