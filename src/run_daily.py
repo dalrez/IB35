@@ -4,7 +4,7 @@ import yfinance as yf
 from datetime import datetime
 from notify_whatsapp import send_whatsapp
 
-def load_tickers(path="../data/tickers.csv"):
+def load_tickers(path="data/tickers.csv"):
     df = pd.read_csv(path)
     tickers = df["Ticker"].dropna().astype(str).str.strip()
     # Quitar líneas vacías
@@ -60,8 +60,8 @@ def main():
     px = to_long_format(raw)
     under = compute_under_sma200(px)
 
-    os.makedirs(../"data", exist_ok=True)
-    under.to_csv("../data/under_sma200.csv", index=False)
+    os.makedirs("data", exist_ok=True)
+    under.to_csv("data/under_sma200.csv", index=False)
 
         # Mensaje diario WhatsApp (corto)
     if under.empty:
