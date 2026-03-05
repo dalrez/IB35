@@ -81,13 +81,25 @@ def main():
     combined.to_csv("data/under_sma200_all.csv", index=False)
 
     # WhatsApp: resumen combinado
+        
     if combined.empty:
-        msg = "Universos (IBEX + Nasdaq100): hoy no hay empresas bajo SMA200."
+        msg = "Universos: hoy no hay tickers bajo SMA200."
     else:
-        lines = [f"Universos: {len(combined)} empresas bajo SMA200 (Top 10 por %):"]
+        # Conteo por universo
+        counts = combined.groupby("Universe")["Ticker"].count().sort_values(ascending=False)
+
+        lines = ["📉 Señal SMA200 (todos los universos)"]
+        lines.append("Resumen por universo:")
+        for uni, n in counts.items():
+            lines.append(f"- {uni}: {n}")
+
+        # Top global (más por debajo)
         top = combined.sort_values("PctBelow").head(10)
+        lines.append("")
+        lines.append("Top 10 global (% bajo SMA200):")
         for _, r in top.iterrows():
             lines.append(f"- {r['Universe']} {r['Ticker']}: {r['PctBelow']:.2f}%")
+
         msg = "\n".join(lines)
 
     try:
