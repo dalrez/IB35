@@ -37,8 +37,7 @@ jobs:
           TWILIO_WHATSAPP_FROM: ${{ secrets.TWILIO_WHATSAPP_FROM }}
           WHATSAPP_TO: ${{ secrets.WHATSAPP_TO }}
         run: |
-          cd src
-          python run_daily.py
+          python -m src.run_daily.py
 
       - name: Commit updated CSV
         run: |
