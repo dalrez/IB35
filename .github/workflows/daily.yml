@@ -30,6 +30,10 @@ jobs:
         run: |
           python src/update_universes.py
 
+      - name: Update names cache (yfinance)
+        run: |
+          python src/update_names.py
+
       - name: Run daily script
         env:
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
