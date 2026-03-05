@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import yfinance as yf
 from datetime import datetime
-from notify_whatsapp import send_whatsapp
+from src.notify_whatsapp import send_whatsapp
 
 def load_tickers(path="data/tickers.csv"):
     df = pd.read_csv(path)
