@@ -1,0 +1,148 @@
+Ticker,Name
+AAPL,Apple Inc.
+ABNB,"Airbnb, Inc."
+ACS.MC,"ACS, Actividades de Construcción y Servicios, S.A."
+ACX.MC,"Acerinox, S.A."
+ADBE,Adobe Inc.
+ADI,"Analog Devices, Inc."
+ADP,"Automatic Data Processing, Inc."
+ADSK,"Autodesk, Inc."
+AENA.MC,"Aena S.M.E., S.A."
+AEP,"American Electric Power Company, Inc."
+ALNY,"Alnylam Pharmaceuticals, Inc."
+AMAT,"Applied Materials, Inc."
+AMD,"Advanced Micro Devices, Inc."
+AMGN,Amgen Inc.
+AMS.MC,"Amadeus IT Group, S.A."
+AMZN,"Amazon.com, Inc."
+ANA.MC,"Acciona, S.A."
+ANE.MC,"Corporación Acciona Energías Renovables, S.A."
+APP,AppLovin Corporation
+ARM,Arm Holdings plc
+ASML,ASML Holding N.V.
+AVGO,Broadcom Inc.
+AXON,"Axon Enterprise, Inc."
+BBVA.MC,"Banco Bilbao Vizcaya Argentaria, S.A."
+BKNG,Booking Holdings Inc.
+BKR,Baker Hughes Company
+BKT.MC,"Bankinter, S.A."
+CABK.MC,"CaixaBank, S.A."
+CCEP,Coca-Cola Europacific Partners PLC
+CDNS,"Cadence Design Systems, Inc."
+CEG,Constellation Energy Corporation
+CHTR,"Charter Communications, Inc."
+CLNX.MC,"Cellnex Telecom, S.A."
+CMCSA,Comcast Corporation
+COL.MC,"Colonial SFL, Socimi S. A."
+COST,Costco Wholesale Corporation
+CPRT,"Copart, Inc."
+CRWD,"CrowdStrike Holdings, Inc."
+CSCO,"Cisco Systems, Inc."
+CSGP,"CoStar Group, Inc."
+CSX,CSX Corporation
+CTAS,Cintas Corporation
+CTSH,Cognizant Technology Solutions Corporation
+DASH,"DoorDash, Inc."
+DDOG,"Datadog, Inc."
+DXCM,"DexCom, Inc."
+EA,Electronic Arts Inc.
+ELE.MC,"Endesa, S.A."
+ENG.MC,"Enagás, S.A."
+EXC,Exelon Corporation
+FANG,"Diamondback Energy, Inc."
+FAST,Fastenal Company
+FDR.MC,"Fluidra, S.A."
+FER,Ferrovial SE
+FER.MC,Ferrovial SE
+FTNT,"Fortinet, Inc."
+GEHC,GE HealthCare Technologies Inc.
+GILD,"Gilead Sciences, Inc."
+GOOG,Alphabet Inc.
+GOOGL,Alphabet Inc.
+GRF.MC,"Grifols, S.A."
+HON,Honeywell International Inc.
+IAG.MC,International Consolidated Airlines Group S.A.
+IBE.MC,"Iberdrola, S.A."
+IDR.MC,"Indra Sistemas, S.A."
+IDXX,"IDEXX Laboratories, Inc."
+INSM,Insmed Incorporated
+INTC,Intel Corporation
+INTU,Intuit Inc.
+ISRG,"Intuitive Surgical, Inc."
+ITX.MC,"Industria de Diseño Textil, S.A."
+KDP,Keurig Dr Pepper Inc.
+KHC,The Kraft Heinz Company
+KLAC,KLA Corporation
+LIN,Linde plc
+LOG.MC,"Logista Integral, S.A."
+LRCX,Lam Research Corporation
+MAP.MC,"Mapfre, S.A."
+MAR,"Marriott International, Inc."
+MCHI,iShares MSCI China ETF
+MCHP,Microchip Technology Incorporated
+MDLZ,"Mondelez International, Inc."
+MEL.MC,"Meliá Hotels International, S.A."
+MELI,"MercadoLibre, Inc."
+META,"Meta Platforms, Inc."
+MNST,Monster Beverage Corporation
+MPWR,"Monolithic Power Systems, Inc."
+MRL.MC,"MERLIN Properties SOCIMI, S.A."
+MRVL,"Marvell Technology, Inc."
+MSFT,Microsoft Corporation
+MSTR,Strategy Inc
+MTS.MC,ArcelorMittal S.A.
+MU,"Micron Technology, Inc."
+NFLX,"Netflix, Inc."
+NTGY.MC,"Naturgy Energy Group, S.A."
+NVDA,NVIDIA Corporation
+NXPI,NXP Semiconductors N.V.
+ODFL,"Old Dominion Freight Line, Inc."
+ORLY,"O'Reilly Automotive, Inc."
+PANW,"Palo Alto Networks, Inc."
+PAYX,"Paychex, Inc."
+PCAR,PACCAR Inc
+PDD,PDD Holdings Inc.
+PEP,"PepsiCo, Inc."
+PLTR,Palantir Technologies Inc.
+PYPL,"PayPal Holdings, Inc."
+QCOM,QUALCOMM Incorporated
+RED.MC,"Redeia Corporación, S.A."
+REGN,"Regeneron Pharmaceuticals, Inc."
+REP.MC,"Repsol, S.A."
+ROP,"Roper Technologies, Inc."
+ROST,"Ross Stores, Inc."
+ROVI.MC,"Laboratorios Farmaceuticos Rovi, S.A."
+SAB.MC,"Banco de Sabadell, S.A."
+SAN.MC,"Banco Santander, S.A."
+SBUX,Starbucks Corporation
+SCYR.MC,"Sacyr, S.A."
+SHOP,Shopify Inc.
+SLR.MC,"Solaria Energía y Medio Ambiente, S.A."
+SNPS,"Synopsys, Inc."
+STX,Seagate Technology Holdings plc
+TEAM,Atlassian Corporation
+TEF.MC,"Telefónica, S.A."
+TMUS,"T-Mobile US, Inc."
+TRI,Thomson Reuters Corporation
+TSLA,"Tesla, Inc."
+TTWO,"Take-Two Interactive Software, Inc."
+TXN,Texas Instruments Incorporated
+UNI.MC,"Unicaja Banco, S.A."
+VRSK,"Verisk Analytics, Inc."
+VRTX,Vertex Pharmaceuticals Incorporated
+WBD,"Warner Bros. Discovery, Inc."
+WDAY,"Workday, Inc."
+WDC,Western Digital Corporation
+WMT,Walmart Inc.
+XEL,Xcel Energy Inc.
+ZS,"Zscaler, Inc."
+^DJI,Dow Jones Industrial Average
+^FTSE,FTSE 100
+^GSPC,S&P 500
+^HSI,HANG SENG INDEX
+^IBEX,IBEX 35
+^IXIC,NASDAQ Composite
+^MERV,MERVAL
+^N225,Nikkei 225
+^NDX,NASDAQ-100
+^STOXX50E,EURO STOXX 50 I
