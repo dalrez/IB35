@@ -99,7 +99,47 @@ tab1, tab2 = st.tabs(["Tabla", "Gráfico"])
 
 with tab1:
     st.subheader("Listado (ordenado por % bajo SMA200)")
-    st.dataframe(table_df, use_container_width=True, height=520)
+    colcfg = {}
+
+    def num_col(label, fmt="%.2f"):
+        return st.column_config.NumberColumn(label, format=fmt)
+    
+    def pct_col(label):
+        # table_df tiene returns como decimal (0.05), esto lo muestra como 5.00%
+        return st.column_config.NumberColumn(label, format="%.2f%%")
+    
+    # Formatos de precio
+    if "AdjClose" in table_df.columns: colcfg["AdjClose"] = num_col("Precio", "%.2f")
+    if "SMA200" in table_df.columns: colcfg["SMA200"] = num_col("SMA200", "%.2f")
+    if "DeltaToSMA200" in table_df.columns: colcfg["DeltaToSMA200"] = num_col("Δ vs SMA200", "%.2f")
+    if "WeeklyMean" in table_df.columns: colcfg["WeeklyMean"] = num_col("Media semanal", "%.2f")
+    if "52wHigh" in table_df.columns: colcfg["52wHigh"] = num_col("52w High", "%.2f")
+    if "52wLow" in table_df.columns: colcfg["52wLow"] = num_col("52w Low", "%.2f")
+    
+    # % (decimales -> % en pantalla)
+    for c, label in [
+        ("PctBelow", "% vs SMA200"),
+        ("Return_5d", "Ret 5d"),
+        ("Return_21d", "Ret 21d"),
+        ("Return_63d", "Ret 63d"),
+        ("Vol_20d", "Vol 20d (anual)"),
+        ("PctFrom52wHigh", "% desde 52w High"),
+        ("PctFrom52wLow", "% desde 52w Low"),
+    ]:
+        if c in table_df.columns:
+            colcfg[c] = pct_col(label)
+    
+    # Ojo: SMA200_Slope_20d ya está en % (porque lo calculamos *100)
+    # Así que lo formateamos como número normal con símbolo %
+    if "SMA200_Slope_20d" in table_df.columns:
+        colcfg["SMA200_Slope_20d"] = st.column_config.NumberColumn("Pendiente SMA200 (20d)", format="%.2f%%")
+    
+    st.dataframe(
+        table_df,
+        use_container_width=True,
+        height=520,
+        column_config=colcfg,
+    )
 
 with tab2:
     st.subheader("Ranking (% bajo SMA200)")
