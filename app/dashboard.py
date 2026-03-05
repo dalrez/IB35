@@ -145,15 +145,11 @@ with tab2:
     st.subheader("Ranking (% bajo SMA200)")
 
     topn = min(15, len(df))
-
-    # Aseguramos orden: más por debajo primero (más negativo)
     dplot = df.sort_values("PctBelow").head(topn).copy()
 
-    # Columnas extra para el hover (solo si existen)
-    hover_cols = []
-    for c in ["AdjClose", "SMA200", "DeltaToSMA200", "Return_5d", "Return_21d", "Return_63d", "Vol_20d"]:
-        if c in dplot.columns:
-            hover_cols.append(c)
+    # Hover: elegimos columnas disponibles
+    hover_cols = [c for c in ["AdjClose", "SMA200", "DeltaToSMA200", "Return_5d", "Return_21d", "Return_63d", "Vol_20d"]
+                  if c in dplot.columns]
 
     fig = px.bar(
         dplot,
@@ -162,58 +158,32 @@ with tab2:
         orientation="h",
         text="PctBelow",
         hover_data=hover_cols,
-        title=f"Top {topn} más por debajo ({universe})" if universe else f"Top {topn} más por debajo",
+        title=f"Top {topn} más por debajo",
     )
 
-    # Texto en barras como porcentaje
+    # Etiquetas en barras como %
     fig.update_traces(texttemplate="%{text:.2f}%", textposition="outside")
 
-    # Eje X con sufijo %
+    # Eje X como %
     fig.update_xaxes(title_text="% vs SMA200", ticksuffix="%", zeroline=True)
-
-    # Etiquetas más limpias
     fig.update_yaxes(title_text="")
 
-    # Tooltip personalizado (si están las columnas)
-    # Ojo: PctBelow ya está en % (no decimal)
-    hover_lines = ["<b>%{y}</b>", "Pct vs SMA200: %{x:.2f}%"]
-    if "AdjClose" in dplot.columns:
-        hover_lines.append("Precio: %{customdata[0]:.2f}")
-        idx = 1
-    else:
-        idx = 0
-    # Construimos dinámicamente según hover_cols
-    # (customdata sigue el orden de hover_cols)
-    def add_if(col, label, fmt):
-        nonlocal idx
-        if col in hover_cols:
-            hover_lines.append(f"{label}: %{{customdata[{idx}]:{fmt}}}")
-            idx += 1
+    # Hover template: usa customdata en el mismo orden que hover_cols
+    lines = ["<b>%{y}</b>", "Pct vs SMA200: %{x:.2f}%"]
+    for i, col in enumerate(hover_cols):
+        if col in ["AdjClose", "SMA200", "DeltaToSMA200"]:
+            lines.append(f"{col}: %{{customdata[{i}]:.2f}}")
+        elif col in ["Return_5d", "Return_21d", "Return_63d", "Vol_20d"]:
+            # returns/vol son decimales: 0.05 -> 5.00%
+            label = col.replace("Return_", "Ret ").replace("Vol_20d", "Vol 20d (anual)")
+            lines.append(f"{label}: %{{customdata[{i}]:.2%}}")
+        else:
+            lines.append(f"{col}: %{{customdata[{i}]}}")
 
-    # Si AdjClose existía ya se consumió customdata[0], ajustamos el resto:
-    # Re-creamos idx correcto:
-    idx = 0
-    for col in hover_cols:
-        if col == "AdjClose":
-            add_if("AdjClose", "Precio", ".2f")
-        elif col == "SMA200":
-            add_if("SMA200", "SMA200", ".2f")
-        elif col == "DeltaToSMA200":
-            add_if("DeltaToSMA200", "Δ vs SMA200", ".2f")
-        elif col == "Return_5d":
-            add_if("Return_5d", "Ret 5d", ".2%")
-        elif col == "Return_21d":
-            add_if("Return_21d", "Ret 21d", ".2%")
-        elif col == "Return_63d":
-            add_if("Return_63d", "Ret 63d", ".2%")
-        elif col == "Vol_20d":
-            add_if("Vol_20d", "Vol 20d (anual)", ".2%")
+    fig.update_traces(hovertemplate="<br>".join(lines) + "<extra></extra>")
 
-    fig.update_traces(hovertemplate="<br>".join(hover_lines) + "<extra></extra>")
-
-    # Margen para que quepa el texto fuera de la barra
+    # Margen para que quepa el texto fuera
     fig.update_layout(margin=dict(l=10, r=10, t=60, b=10))
 
     st.plotly_chart(fig, use_container_width=True)
-
 st.caption("Datos generados automáticamente por GitHub Actions. David Alvarez Ruiz")
