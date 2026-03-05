@@ -5,18 +5,19 @@ import plotly.express as px
 st.set_page_config(page_title="IBEX35 - Bajo SMA200", layout="wide")
 st.title("IBEX35 – Empresas bajo SMA200")
 
-PATH = "data/under_sma200.csv"
+PATH = "data/under_sma200_all.csv"
 
 try:
     df = pd.read_csv(PATH)
 except FileNotFoundError:
-    st.warning("Aún no existe data/under_sma200.csv. Ejecuta el workflow una vez.")
+    st.warning("Aún no existe data/under_sma200_all.csv. Ejecuta el workflow una vez.")
     st.stop()
 
 if df.empty:
     st.info("No hay empresas bajo SMA200 (según la lista actual).")
     st.stop()
-
+universe = st.selectbox("Universo", sorted(df["Universe"].unique()))
+df = df[df["Universe"] == universe].copy()
 # Limpieza / tipos
 df["AdjClose"] = pd.to_numeric(df["AdjClose"], errors="coerce")
 df["SMA200"] = pd.to_numeric(df["SMA200"], errors="coerce")
