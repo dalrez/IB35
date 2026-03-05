@@ -75,8 +75,12 @@ def main():
             )
         msg = "\n".join(lines)
 
-    send_whatsapp(msg)
-    print("WhatsApp enviado.")
+    try:
+        send_whatsapp(msg)
+        print("WhatsApp enviado.")
+    except Exception as e:
+        print("⚠️ No se pudo enviar WhatsApp, pero el proceso continúa.")
+        print(f"Detalle del error: {e}")
 
     if under.empty:
         print("Hoy NO hay empresas bajo SMA200 (según la lista del fichero).")
