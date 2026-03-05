@@ -89,7 +89,7 @@ def main():
         counts = combined.groupby("Universe")["Ticker"].count().sort_values(ascending=False)
 
         lines = ["📉 Señal SMA200 (todos los universos)"]
-        lines.append("Resumen por universo:")
+        lines.append("Resumen: https://ib35insights.streamlit.app/#ibex-35-empresas-bajo-sma-200")
         for uni, n in counts.items():
             lines.append(f"- {uni}: {n}")
 
