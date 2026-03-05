@@ -3,7 +3,7 @@ import streamlit as st
 import plotly.express as px
 
 st.set_page_config(page_title="IBEX35 - Bajo SMA200", layout="wide")
-st.title("IBEX35 – Empresas bajo SMA200")
+st.title("Empresas bajo SMA200")
 
 PATH = "data/under_sma200_all.csv"
 
