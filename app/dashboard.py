@@ -44,14 +44,19 @@ df = df.sort_values("PctBelow")  # más negativo primero
 st.sidebar.header("Vista")
 view = st.sidebar.radio("Modo", ["Básica", "Avanzada"], index=0)
 
-only_top = st.sidebar.checkbox("Mostrar solo Top 25 (más por debajo)", value=True)
+top_n = st.sidebar.selectbox(
+    "Top N (más por debajo)",
+    options=[10, 25, 50, 100, "Todos"],
+    index=1,  # 25 por defecto
+)
+
 search = st.sidebar.text_input("Buscar ticker (contiene)", value="").strip().upper()
 
 if search and "Ticker" in df.columns:
     df = df[df["Ticker"].astype(str).str.upper().str.contains(search, na=False)].copy()
 
-if only_top and len(df) > 25:
-    df = df.head(25).copy()
+if top_n != "Todos" and len(df) > int(top_n):
+    df = df.head(int(top_n)).copy()
 
 # --- Columnas a mostrar ---
 basic_cols = [
