@@ -12,7 +12,7 @@ from datetime import datetime
 
 if os.path.exists(PATH):
     ts = os.path.getmtime(PATH)
-    st.caption("Última actualización del dataset: " + datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S"))
+    st.caption("Última actualización: " + datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S"))
 else:
     st.caption("Última actualización del dataset: (aún no existe)")
 
