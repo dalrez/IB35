@@ -12,22 +12,20 @@ UNIVERSES = {
 }
 THRESHOLD_PCT = 5.0  # mostrar solo si está 5% o más por debajo de la SMA200
 
-def load_tickers(path="data/tickers.csv"):
+def load_tickers(path: str) -> pd.DataFrame:
     df = pd.read_csv(path)
 
-    # Normaliza columnas
     if "Ticker" not in df.columns:
         raise RuntimeError(f"El fichero {path} debe tener una columna 'Ticker'.")
 
-    df["Ticker"] = df["Ticker"].astype(str).str.strip()
+    df["Ticker"] = df["Ticker"].astype(str).str.strip().str.upper()
     df = df[df["Ticker"] != ""]
 
-    # Si no hay Name, lo creamos vacío
     if "Name" not in df.columns:
         df["Name"] = ""
 
     df["Name"] = df["Name"].astype(str).fillna("").str.strip()
-    return df[["Ticker", "Name"]]
+    return df[["Ticker", "Name"]].drop_duplicates(subset=["Ticker"], keep="first")
 
 def download_prices(tickers):
     # Bajamos ~400 días para tener margen de 200 sesiones
@@ -139,7 +137,33 @@ def main():
         raw = download_prices(tickers)
         px = to_long_format(raw)
         under = compute_under_sma200(px)
-        under = under.merge(tick_df, on="Ticker", how="left")
+
+        # --- Nombres con prioridad ---
+        # 1) Primero el Name del CSV del universo (INDICES ya trae Name bueno)
+        tick_df["Ticker"] = tick_df["Ticker"].astype(str).str.strip().str.upper()
+        under["Ticker"] = under["Ticker"].astype(str).str.strip().str.upper()
+        
+        under = under.merge(tick_df[["Ticker", "Name"]], on="Ticker", how="left")
+        
+        # 2) Luego rellena Name vacío con cache yfinance (si existe)
+        try:
+            names = pd.read_csv("data/names_cache.csv")
+            names["Ticker"] = names["Ticker"].astype(str).str.strip().str.upper()
+            names["Name_yf"] = names["Name"].astype(str).fillna("").str.strip()
+            names = names[["Ticker", "Name_yf"]].drop_duplicates(subset=["Ticker"], keep="first")
+        
+            under = under.merge(names, on="Ticker", how="left")
+        
+            under["Name"] = under["Name"].fillna("").astype(str)
+            under["Name_yf"] = under["Name_yf"].fillna("").astype(str)
+        
+            mask = under["Name"].str.strip() == ""
+            under.loc[mask, "Name"] = under.loc[mask, "Name_yf"]
+        
+            under = under.drop(columns=["Name_yf"], errors="ignore")
+        except FileNotFoundError:
+            pass
+        
         under["Universe"] = name
         under.to_csv(f"data/under_sma200_{name}.csv", index=False)
         all_under.append(under)
