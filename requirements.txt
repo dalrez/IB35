@@ -4,3 +4,4 @@ numpy
 streamlit>=1.23
 plotly
 altair<5
+lxml
