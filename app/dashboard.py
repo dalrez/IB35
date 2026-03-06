@@ -99,6 +99,16 @@ advanced_cols = basic_cols + [
 cols_show = basic_cols if view == "Básica" else advanced_cols
 cols_show = [c for c in cols_show if c in df.columns]
 table_df = df[cols_show].copy()
+# --- Tabla: mostrar returns/vol en % (pero sin tocar los datos originales) ---
+table_view = table_df.copy()
+
+cols_decimal_as_pct = [c for c in ["Return_5d", "Return_21d", "Return_63d", "Vol_20d"] if c in table_view.columns]
+for c in cols_decimal_as_pct:
+    table_view[c] = table_view[c] * 100  # 0.05 -> 5.0
+
+# Redondeo para tabla
+for c in table_view.select_dtypes(include="number").columns:
+    table_view[c] = table_view[c].round(4)
 
 # Redondeo para tabla
 for c in table_df.select_dtypes(include="number").columns:
@@ -159,7 +169,7 @@ with tab1:
         colcfg["SMA200_Slope_20d"] = st.column_config.NumberColumn("Pendiente SMA200 (20d)", format="%.2f%%")
     
     st.dataframe(
-        table_df,
+        table_view,
         use_container_width=True,
         height=520,
         column_config=colcfg,
