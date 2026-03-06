@@ -117,7 +117,7 @@ if "Vol_20d" in df.columns:
 st.divider()
 
 # --- Tabs: Tabla / Gráfico ---
-tab1, tab2 = st.tabs(["Tabla", "Gráfico"])
+tab1, tab2, tab3 = st.tabs(["Tabla", "Gráfico", "Detalle"])
 
 with tab1:
     st.subheader("Listado (ordenado por % bajo SMA200)")
@@ -222,4 +222,78 @@ with tab2:
     fig.update_layout(margin=dict(l=10, r=10, t=60, b=10))
 
     st.plotly_chart(fig, use_container_width=True)
+    
+with tab3:
+    st.subheader("Detalle: precio vs SMA200")
+
+    # Intentamos cargar el histórico del universo seleccionado
+    # Si elegiste "Todos", te obligo a elegir uno concreto para el histórico
+    if universe == "Todos":
+        st.info("Selecciona un universo concreto arriba para ver el histórico.")
+        st.stop()
+
+    hist_path = f"data/prices_{universe}.csv"
+
+    try:
+        hist = pd.read_csv(hist_path, parse_dates=["Date"])
+    except FileNotFoundError:
+        st.warning(f"No existe {hist_path} todavía. Ejecuta el workflow para generarlo.")
+        st.stop()
+
+    if hist.empty:
+        st.info("Histórico vacío.")
+        st.stop()
+
+    # Selector de ticker (y nombre si existe)
+    if "Name" in df.columns:
+        # Creamos etiqueta "TICKER — Name" para elegir más cómodo
+        label_map = {}
+        for _, r in df[["Ticker", "Name"]].drop_duplicates().iterrows():
+            t = str(r["Ticker"])
+            n = str(r.get("Name", "")).strip()
+            label_map[t] = f"{t} — {n}" if n else t
+
+        tickers_available = sorted(hist["Ticker"].dropna().unique().tolist())
+        options = [label_map.get(t, t) for t in tickers_available]
+        # hacemos mapping inverso
+        inv = {label_map.get(t, t): t for t in tickers_available}
+
+        chosen_label = st.selectbox("Ticker", options)
+        ticker = inv[chosen_label]
+    else:
+        ticker = st.selectbox("Ticker", sorted(hist["Ticker"].dropna().unique().tolist()))
+
+    # Filtramos serie
+    s = hist[hist["Ticker"] == ticker].sort_values("Date").copy()
+    if s.empty:
+        st.info("No hay datos para ese ticker.")
+        st.stop()
+
+    # Calculamos SMA200 para el gráfico (sobre el histórico)
+    s["AdjClose"] = pd.to_numeric(s["AdjClose"], errors="coerce")
+    s = s.dropna(subset=["AdjClose"]).copy()
+    s["SMA200"] = s["AdjClose"].rolling(200).mean()
+
+    # Mostramos últimos N puntos (ajustable)
+    last_n = st.slider("Días a mostrar", min_value=60, max_value=400, value=260, step=20)
+    s_plot = s.tail(last_n).copy()
+
+    # Gráfico
+    fig = px.line(
+        s_plot,
+        x="Date",
+        y=["AdjClose", "SMA200"],
+        title=f"{ticker} — Precio vs SMA200 ({universe})",
+    )
+    fig.update_yaxes(title_text="Precio")
+    fig.update_xaxes(title_text="")
+    st.plotly_chart(fig, use_container_width=True)
+
+    # KPIs rápidos del ticker
+    last = s.iloc[-1]
+    sma = last.get("SMA200")
+    if pd.notna(sma) and sma != 0:
+        pct = (last["AdjClose"] / sma - 1) * 100
+        st.caption(f"Último: {last['AdjClose']:.2f} | SMA200: {sma:.2f} | % vs SMA200: {pct:.2f}%")
+
 st.caption("Datos generados automáticamente por GitHub Actions. David Alvarez Ruiz")
