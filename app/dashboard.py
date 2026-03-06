@@ -256,42 +256,66 @@ with tab3:
         st.info("Histórico vacío.")
         st.stop()
 
-    # Selector de ticker (y nombre si existe)
-    if "Name" in df.columns:
-        label_map = {}
-        for _, r in df[["Ticker", "Name"]].drop_duplicates().iterrows():
-            t = str(r["Ticker"])
-            n = str(r.get("Name", "")).strip()
-            # SOLO nombre; si no hay nombre, cae a ticker
-            label_map[t] = n if n else t
+    # --- Selector de ticker: SOLO NOMBRE (usando cache y CSV de índices) ---
+    tickers_available = sorted(hist["Ticker"].dropna().astype(str).unique().tolist())
+    if not tickers_available:
+        st.info("No hay tickers en el histórico.")
+        st.stop()
+    
+    # Construimos un mapa Ticker -> Name desde:
+    # 1) names_cache.csv (yfinance)
+    # 2) tickers_indices.csv (manual) con prioridad
+    name_map = {}
+    
+    # 1) Cache yfinance
+    try:
+        nc = pd.read_csv("data/names_cache.csv")
+        if "Ticker" in nc.columns and "Name" in nc.columns:
+            nc["Ticker"] = nc["Ticker"].astype(str).str.strip().str.upper()
+            nc["Name"] = nc["Name"].astype(str).fillna("").str.strip()
+            name_map.update(dict(zip(nc["Ticker"], nc["Name"])))
+    except FileNotFoundError:
+        pass
+    
+    # 2) Nombres manuales de índices (prioridad)
+    try:
+        idx = pd.read_csv("data/tickers_indices.csv")
+        if "Ticker" in idx.columns and "Name" in idx.columns:
+            idx["Ticker"] = idx["Ticker"].astype(str).str.strip().str.upper()
+            idx["Name"] = idx["Name"].astype(str).fillna("").str.strip()
+            # pisa lo anterior si hay coincidencias
+            name_map.update(dict(zip(idx["Ticker"], idx["Name"])))
+    except FileNotFoundError:
+        pass
+    
+    # Labels: solo nombre; si falta, caemos a ticker
+    labels = []
+    inv = {}
+    for t in tickers_available:
+        t_norm = str(t).strip().upper()
+        label = name_map.get(t_norm, "").strip()
+        if not label:
+            label = t_norm  # fallback si no hay nombre
+    
+        # Evitar colisiones si dos nombres iguales
+        if label in inv:
+            label = f"{label} ({t_norm})"
+    
+        inv[label] = t_norm
+        labels.append(label)
+    
+    # Preferido por defecto: ^GSPC (si existe)
+    preferred_ticker = "^GSPC"
+    preferred_label = None
+    if preferred_ticker in tickers_available:
+        nm = name_map.get(preferred_ticker, "").strip()
+        preferred_label = nm if nm else preferred_ticker
+    
+    default_index = labels.index(preferred_label) if preferred_label in labels else 0
+    
+    chosen_label = st.selectbox("Nombre", labels, index=default_index)
+    ticker = inv[chosen_label]
 
-        tickers_available = sorted(hist["Ticker"].dropna().unique().tolist())
-        options = [label_map.get(t, t) for t in tickers_available]
-
-        # mapping inverso seguro (si hubiera nombres duplicados, añadimos el ticker)
-        inv = {}
-        options_unique = []
-        for t in tickers_available:
-            label = label_map.get(t, t)
-            if label in inv:  # nombre duplicado
-                label = f"{label} ({t})"
-            inv[label] = t
-            options_unique.append(label)
-        
-        options = options_unique
-
-        preferred_ticker = "^GSPC"
-        
-        # etiqueta preferida (con nombre si existe)
-        preferred_label = label_map.get(preferred_ticker, preferred_ticker)
-        
-        # índice por defecto en el selectbox
-        default_index = options.index(preferred_label) if preferred_label in options else 0
-        
-        chosen_label = st.selectbox("Ticker", options, index=default_index)
-        ticker = inv[chosen_label]
-    else:
-        ticker = st.selectbox("Ticker", sorted(hist["Ticker"].dropna().unique().tolist()))
 
     # Filtramos serie
     s = hist[hist["Ticker"] == ticker].sort_values("Date").copy()
