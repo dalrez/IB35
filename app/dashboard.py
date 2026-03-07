@@ -132,7 +132,7 @@ st.divider()
 tab1, tab2, tab3 = st.tabs(["Tabla", "Gráfico", "Detalle"])
 
 with tab1:
-    st.subheader("Listado (tabla pro)")
+    st.subheader("Listado con SMA destacada")
 
     from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
     from st_aggrid.shared import GridUpdateMode
@@ -143,7 +143,7 @@ with tab1:
     # Renombrar columnas a nombres humanos
     rename = {
         "RunDate": "Fecha",
-        "Universe": "Universo",
+        "Universe": "Mercado",
         "Ticker": "Ticker",
         "Name": "Nombre",
         "AdjClose": "Precio",
@@ -165,7 +165,7 @@ with tab1:
 
     # Orden recomendado
     order = [
-        "Fecha", "Universo", "Ticker", "Nombre",
+        "Fecha", "Mercado", "Ticker", "Nombre",
         "Precio", "SMA200", "Δ vs SMA200", "% vs SMA200",
         "Ret 21d", "Ret 63d", "Vol 20d (anual)",
         "% desde 52w Low", "% desde 52w High",
