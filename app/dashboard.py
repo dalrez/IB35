@@ -129,7 +129,7 @@ if "Vol_20d" in df.columns:
 st.divider()
 
 # --- Tabs: Tabla / Gráfico ---
-tab1, tab2, tab3 = st.tabs(["Tabla", "Gráfico", "Detalle"])
+tab1, tab2, tab3 = st.tabs(["Tabla","SMA 200","Gráfico"])
 
 with tab1:
     st.subheader("Listado (tabla pro)")
@@ -498,6 +498,17 @@ with tab3:
         x="Date",
         y=["AdjClose", "SMA200"],
         title=f"{display_name} — Precio vs SMA200 ({universe})",
+    )
+    # Renombrar series en la leyenda
+    fig.for_each_trace(lambda tr: tr.update(
+        name="Precio" if tr.name == "AdjClose" else ("Media 200" if tr.name == "SMA200" else tr.name),
+        legendgroup="Precio" if tr.name == "AdjClose" else ("Media 200" if tr.name == "SMA200" else tr.name),
+    ))
+    
+    # Leyenda arriba (horizontal)
+    fig.update_layout(
+        legend_title_text="",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
     )
     # Tooltip limpio y diferente por serie
     fig.for_each_trace(lambda tr: tr.update(
