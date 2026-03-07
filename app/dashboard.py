@@ -499,6 +499,14 @@ with tab3:
         y=["AdjClose", "SMA200"],
         title=f"{display_name} — Precio vs SMA200 ({universe})",
     )
+    # Tooltip limpio y diferente por serie
+    fig.for_each_trace(lambda tr: tr.update(
+        hovertemplate=(
+            f"<b>{display_name}</b><br>"
+            "Fecha: %{x|%Y-%m-%d}<br>"
+            + ("Precio: %{y:.2f}<br>" if tr.name == "AdjClose" else "SMA200: %{y:.2f}<br>")
+        )
+    ))
     fig.update_yaxes(title_text="Precio")
     fig.update_xaxes(title_text="")
     st.plotly_chart(fig, use_container_width=True)
