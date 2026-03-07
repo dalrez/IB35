@@ -246,22 +246,22 @@ with tab1:
         theme="streamlit",
     )
 
-        selected = grid.get("selected_rows", None)
+    selected = grid.get("selected_rows", None)
         
+    row = None
+    # Puede venir como DataFrame (común) o como lista de dicts (según versión)
+    if selected is None:
         row = None
-        # Puede venir como DataFrame (común) o como lista de dicts (según versión)
-        if selected is None:
-            row = None
-        elif hasattr(selected, "empty"):  # pandas DataFrame
-            if not selected.empty:
-                row = selected.iloc[0].to_dict()
-        elif isinstance(selected, list):
-            if len(selected) > 0:
-                row = selected[0]
+    elif hasattr(selected, "empty"):  # pandas DataFrame
+        if not selected.empty:
+            row = selected.iloc[0].to_dict()
+    elif isinstance(selected, list):
+        if len(selected) > 0:
+            row = selected[0]
         
-        if row and "Ticker" in row and row["Ticker"]:
-            st.session_state["selected_ticker"] = str(row["Ticker"]).strip()
-            st.caption(f"Seleccionado: **{st.session_state['selected_ticker']}** → ve a la pestaña **Detalle**")
+    if row and "Ticker" in row and row["Ticker"]:
+        st.session_state["selected_ticker"] = str(row["Ticker"]).strip()
+        st.caption(f"Seleccionado: **{st.session_state['selected_ticker']}** → ve a la pestaña **Detalle**")
             
 with tab2:
     st.subheader("Ranking (% bajo SMA200)")
