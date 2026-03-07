@@ -122,9 +122,9 @@ c3.metric("Mejor % (menos bajo)", f"{df['PctBelow'].max():.2f}%")
 
 c4, c5 = st.columns(2)
 if "Return_21d" in df.columns:
-    c4.metric("Media retorno 1 mes (21d)", f"{df['Return_21d'].mean() * 100:.2f}%")
+    c4.metric("Media Rentabilidad 1 mes (21d)", f"{df['Return_21d'].mean() * 100:.2f}%")
 if "Vol_20d" in df.columns:
-    c5.metric("Volatilidad mediana (20d, anual)", f"{df['Vol_20d'].median() * 100:.2f}%")
+    c5.metric("Volatilidad media (20d, anual)", f"{df['Vol_20d'].mean() * 100:.2f}%")
 
 st.divider()
 
